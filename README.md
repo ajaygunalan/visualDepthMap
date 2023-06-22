@@ -2,8 +2,8 @@
 Visualize the depth of ablation on surgical images using OCT in real-time.
 
 ## Steps
-1. Chnage the locataion of B-scan
-2. Filter Ascan druing BScan
+1. Change the location of B-scan. 
+2. Filter A-scan during B-scan
 
 ## Error
-`ERROR: could not save the data`
+`ERROR: Could not save the data`
