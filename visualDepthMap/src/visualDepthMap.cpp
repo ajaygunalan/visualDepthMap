@@ -69,7 +69,7 @@ void ExportDataAndImage()
 	setColoringBoundaries(Coloring, 0.0, 70.0);
 	// Exports the processed data to an image with the specified slice normal direction since this will result in 2D-images.
 	// To get the B-scan in one image with depth and scan field as axes for a single B-scan #Direction_3 is chosen.
-	exportDataAsImage(BScan, Coloring, ColoredDataExport_JPG, Direction_3, "C:\\test_oct_image_9.jpg", ExportOption_DrawScaleBar | ExportOption_DrawMarkers | ExportOption_UsePhysicalAspectRatio);
+	exportDataAsImage(BScan, Coloring, ColoredDataExport_JPG, Direction_3, "C:\\Ajay_OCT\\visualDepthMap\\data\\scan.jpg", ExportOption_DrawScaleBar | ExportOption_DrawMarkers | ExportOption_UsePhysicalAspectRatio);
 
 
 	// TODO: warum nicht .srm?
