@@ -82,6 +82,7 @@ void ExportDataAndImage()
 	// Convert ColoredDataHandle to OpenCV Mat
 	// access image data
 
+	visualizeScanPatternOnImage(Probe, Pattern, VideoImg);
 	unsigned long * data = getColoredDataPtr(VideoImg);
 	//float* data = getDataPtr(VideoImg);
 	int width = 648;

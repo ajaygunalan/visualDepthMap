@@ -3,8 +3,6 @@ Visualize the depth of ablation on surgical images using OCT in real-time.
 
 ## Steps
 1. Change the location of B-scan.
-  -  Got video image but no scanning info.
-  - 
 2. Filter A-scan during B-scan
 
 ## Error
