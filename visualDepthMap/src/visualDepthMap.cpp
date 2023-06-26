@@ -24,6 +24,7 @@ void ExportDataAndImage()
 
 	RawDataHandle Raw = createRawData();
 	DataHandle BScan = createData();
+	ColoredDataHandle VideoImg = createColoredData();
 
 
 	if (getError(message, 1024))
@@ -44,11 +45,18 @@ void ExportDataAndImage()
 	setDevicePreset(Dev, 0, Probe, Proc, 0);
 
 
-	ScanPatternHandle Pattern = createBScanPattern(Probe, 2.0, 1024);
+	double startX = 5.0;
+	double startY = 5.0;
+	double stopX = -5.0;
+	double stopY = -5.0;
+
+	ScanPatternHandle Pattern = createBScanPatternManual(Probe, startX, startY, stopX, stopY, 1024);
 
 	startMeasurement(Dev, Pattern, Acquisition_AsyncFinite);
 
 	getRawData(Dev, Raw);
+	getCameraImage(Dev, VideoImg);
+
 
 	setProcessedDataOutput(Proc, BScan);
 	executeProcessing(Proc, Raw);
@@ -69,7 +77,29 @@ void ExportDataAndImage()
 	setColoringBoundaries(Coloring, 0.0, 70.0);
 	// Exports the processed data to an image with the specified slice normal direction since this will result in 2D-images.
 	// To get the B-scan in one image with depth and scan field as axes for a single B-scan #Direction_3 is chosen.
-	exportDataAsImage(BScan, Coloring, ColoredDataExport_JPG, Direction_3, "C:\\Ajay_OCT\\visualDepthMap\\data\\scan.jpg", ExportOption_DrawScaleBar | ExportOption_DrawMarkers | ExportOption_UsePhysicalAspectRatio);
+	exportDataAsImage(BScan, Coloring, ColoredDataExport_JPG, Direction_3, "C:\\Ajay_OCT\\visualDepthMap\\data\\oct.jpg", ExportOption_DrawScaleBar | ExportOption_DrawMarkers | ExportOption_UsePhysicalAspectRatio);
+	// Save video camera image
+	// Convert ColoredDataHandle to OpenCV Mat
+	// access image data
+
+	unsigned long * data = getColoredDataPtr(VideoImg);
+	//float* data = getDataPtr(VideoImg);
+	int width = 648;
+	int height = 484;
+
+	// Convert and export the image
+	cv::Mat cvImage = cv::Mat(height, width, CV_8UC3);
+	for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width; j++) {
+			unsigned long pixelValue = data[i * width + j];
+			cv::Vec3b& pixel = cvImage.at<cv::Vec3b>(i, j);
+			pixel[0] = (pixelValue >> 16) & 0xFF; // Blue channel
+			pixel[1] = (pixelValue >> 8) & 0xFF;  // Green channel
+			pixel[2] = pixelValue & 0xFF;         // Red channel
+		}
+	}
+
+	cv::imwrite("C:\\Ajay_OCT\\visualDepthMap\\data\\scanPattern.jpg", cvImage);
 
 
 	// TODO: warum nicht .srm?
@@ -85,6 +115,7 @@ void ExportDataAndImage()
 
 	clearData(BScan);
 	clearRawData(Raw);
+	clearColoredData(VideoImg);
 
 	clearProcessing(Proc);
 	closeProbe(Probe);
