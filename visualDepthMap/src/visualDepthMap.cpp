@@ -16,7 +16,7 @@ using namespace std;
 #include <iostream>
 
 
-void ExportDataAndImage() {
+void ExportDataAndImage(string n, double startX, double startY, double stopX, double stopY) {
 	char message[1024];
 
 	OCTDeviceHandle Dev = initDevice();
@@ -46,10 +46,7 @@ void ExportDataAndImage() {
 	setDevicePreset(Dev, 0, Probe, Proc, 0);
 
 
-	double startX = -2.0;
-	double startY = -1.0;
-	double stopX = 2.5;
-	double stopY = -1.0;
+
 
 	ScanPatternHandle Pattern = createBScanPatternManual(Probe, startX, startY, stopX, stopY, 1024);
 
@@ -67,11 +64,15 @@ void ExportDataAndImage() {
 	setColoringBoundaries(Coloring, 0.0, 70.0);
 	// Exports the processed data to an image with the specified slice normal direction since this will result in 2D-images.
 	// To get the B-scan in one image with depth and scan field as axes for a single B-scan #Direction_3 is chosen.
-	exportDataAsImage(BScan, Coloring, ColoredDataExport_JPG, Direction_3, "C:\\Ajay_OCT\\visualDepthMap\\data\\oct.jpg", ExportOption_DrawScaleBar | ExportOption_DrawMarkers | ExportOption_UsePhysicalAspectRatio);
-	
 
 
 
+	string filepath = "C:\\Ajay_OCT\\visualDepthMap\\data\\oct";
+	string exten = ".jpg";
+	string fullpath = filepath + n + exten;
+	const char* cstr = fullpath.c_str();
+
+	exportDataAsImage(BScan, Coloring, ColoredDataExport_JPG, Direction_3, cstr, ExportOption_DrawScaleBar | ExportOption_DrawMarkers | ExportOption_UsePhysicalAspectRatio);
 	//cv::Mat OCTimage = cv::imread("C:/Ajay_OCT/visualDepthMap/data/oct.jpg", cv::IMREAD_COLOR);
 
 
@@ -98,18 +99,19 @@ void ExportDataAndImage() {
 			pixel[2] = pixelValue & 0xFF;         // Red channel
 		}
 	}
+	
 
+	filepath = "C:\\Ajay_OCT\\visualDepthMap\\data\\scanPattern";
+	exten = ".jpg";
+	fullpath = filepath + n + exten;
+	cstr = fullpath.c_str();
 
-	cv::imwrite("C:\\Ajay_OCT\\visualDepthMap\\data\\scanPattern.jpg", videoImagecv);
+	cv::imwrite(cstr, videoImagecv);
 
 
 	// TODO: warum nicht .srm?
 
-	if (getError(message, 1024)){
-		cout << "ERROR: " << message << endl;
-		_getch();
-		return;
-	}
+
 
 	clearScanPattern(Pattern);
 
@@ -127,10 +129,35 @@ void ExportDataAndImage() {
 
 int main(){
 
-    ExportDataAndImage();
+	double startX = -2.2;
+	double startY = -1.0;
+	double stopX = 2.7;
+	double stopY = -1.0;
+
+	ExportDataAndImage("1", startX, startY, stopX, stopY);
+
+	std::cout << "1 done; 2 to start" << std::endl;
+	startX = -2.2;
+	startY = 0.0;
+	stopX = 2.7;
+	stopY = 0.0;
+	
+	ExportDataAndImage("2", startX, startY, stopX, stopY);
+
+
+	std::cout << "2 done; 3 to start" << std::endl;
+	startX = -2.2;
+	startY = -2.0;
+	stopX = 2.7;
+	stopY = -2.0;
+
+	ExportDataAndImage("3", startX, startY, stopX, stopY);
+
 
 
 	return 0;
+
+	std::cout<<"main done"<<std::endl;
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
