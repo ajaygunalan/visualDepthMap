@@ -45,10 +45,10 @@ void ExportDataAndImage()
 	setDevicePreset(Dev, 0, Probe, Proc, 0);
 
 
-	double startX = 5.0;
-	double startY = 5.0;
-	double stopX = -5.0;
-	double stopY = -5.0;
+	double startX = -2.5;
+	double startY = -1.0;
+	double stopX = 3.0;
+	double stopY = -1.0;
 
 	ScanPatternHandle Pattern = createBScanPatternManual(Probe, startX, startY, stopX, stopY, 1024);
 
@@ -56,7 +56,7 @@ void ExportDataAndImage()
 
 	getRawData(Dev, Raw);
 	getCameraImage(Dev, VideoImg);
-
+	
 
 	setProcessedDataOutput(Proc, BScan);
 	executeProcessing(Proc, Raw);
@@ -82,9 +82,10 @@ void ExportDataAndImage()
 	// Convert ColoredDataHandle to OpenCV Mat
 	// access image data
 
+	std::chrono::seconds(1);
 	visualizeScanPatternOnImage(Probe, Pattern, VideoImg);
+	
 	unsigned long * data = getColoredDataPtr(VideoImg);
-	//float* data = getDataPtr(VideoImg);
 	int width = 648;
 	int height = 484;
 
@@ -100,7 +101,9 @@ void ExportDataAndImage()
 		}
 	}
 
-	cv::imwrite("C:\\Ajay_OCT\\visualDepthMap\\data\\scanPattern.jpg", cvImage);
+	cv::imshow("Image", cvImage);
+	cv::waitKey(0);
+	//cv::imwrite("C:\\Ajay_OCT\\visualDepthMap\\data\\scanPattern.jpg", cvImage);
 
 
 	// TODO: warum nicht .srm?

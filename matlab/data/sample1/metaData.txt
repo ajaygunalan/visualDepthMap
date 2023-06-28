@@ -1,0 +1,4 @@
+step = 0.4
+pause = 2
+shortStep = 0.4
+shortPause = 0.1
